@@ -1,6 +1,6 @@
 # Online Auction Web System (Hệ thống Web Đấu giá Trực tuyến)
 
-🔗 **Jira Task Board:** [Chèn_Link_Jira_Của_Nhóm_Vào_Đây]
+🔗 **Jira Task Board:** https://lsang9494.atlassian.net/jira/software/projects/SCRUM/boards/1
 
 ## 1. Project Overview
 This project is an online auction platform that allows users to list items, place bids in real-time, and securely process payments. 
