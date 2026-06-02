@@ -1,75 +1,106 @@
-# Online Auction Web System (Hệ thống Web Đấu giá Trực tuyến)
+# Hệ thống Web Đấu giá Trực tuyến (Online Auction Web System)
 
-🔗 **Jira Task Board:** https://lsang9494.atlassian.net/jira/software/projects/SCRUM/boards/1
+Dự án phần mềm nền tảng đấu giá trực tuyến cho phép người dùng đăng sản phẩm, đặt giá thầu theo thời gian thực và thanh toán an toàn, tích hợp trí tuệ nhân tạo và hệ thống lập lịch tự động nhằm số hóa toàn bộ quy trình mua bán minh bạch.
 
-## 1. Project Overview
-This project is an online auction platform that allows users to list items, place bids in real-time, and securely process payments. 
-(Dự án này là nền tảng đấu giá trực tuyến cho phép người dùng đăng sản phẩm, đặt giá thầu theo thời gian thực và thanh toán an toàn.)
+## 1. Thành viên nhóm
 
-## 2. Research By Learning (RBL) Focus
-Trong dự án này, nhóm tập trung nghiên cứu và áp dụng các kiến thức chuyên sâu vào các khía cạnh sau (In this project, our RBL focuses on):
+| STT | Họ và Tên | Mã Sinh Viên | Phân công công việc |
+|---|---|---|---|
+| 1 | **Tuan** | DE190463 | Xử lý CSDL, API Đăng nhập / Backend. |
+| 2 | **Sang** | DE190062 | Xây dựng thuật toán Real-time Bidding (WebSocket) / Backend. |
+| 3 | **Long** | DE190344 | Thiết kế giao diện / Frontend. |
+| 4 | **Thắng** | DE190404 | Tích hợp cổng thanh toán / API Sản phẩm. |
+| 5 | **Đức** | DE191098 | Viết tài liệu đặc tả (SRS), kiểm thử phần mềm (Tester) & Quản lý dự án. |
 
-* **Thuật toán (Algorithms):** * **Xử lý đồng thời (Concurrency Control):** Thuật toán xử lý tình trạng Race Condition khi nhiều người dùng cùng đặt giá (bid) trong cùng một mili-giây.
-  * **Anti-Sniping (Chống bắn tỉa):** Thuật toán tự động gia hạn thời gian đấu giá (ví dụ: thêm 5 phút) nếu có người đặt giá ở những giây cuối cùng.
-* **Hệ thống & Kiến trúc (System Architecture):** * **Event-Driven Architecture:** Sử dụng kiến trúc hướng sự kiện để cập nhật trạng thái đấu giá ngay lập tức đến tất cả các client đang theo dõi phiên đấu giá.
-  * **Cơ sở dữ liệu (Database Optimization):** Thiết kế SQL database tối ưu cho việc ghi log lịch sử đặt giá thầu với tốc độ cao.
-* **Công nghệ (Technologies):** * Nghiên cứu và tích hợp **WebSockets / Socket.io** (để truyền dữ liệu thời gian thực thay vì HTTP request thông thường).
-  * Sử dụng **Spring Boot / Java** kết hợp với **Redis** để cache dữ liệu giá thầu, giảm tải cho Database chính.
+---
 
-## 3. Hướng dẫn cài đặt và chạy dự án (Installation & Setup Guide)
+## 2. Tổng quan Dự án
 
-### Prerequisites (Yêu cầu môi trường)
-- Java 17+ / Node.js
-- MySQL / PostgreSQL
-- Redis (Optional but recommended for real-time bids)
+### 2.1. Phân hệ Nghiệp vụ cốt lõi (Business Scope)
+* **Quy trình vận hành khép kín:** Số hóa toàn bộ vòng đời của một phiên đấu giá từ lúc người bán yêu cầu tạo phiên, duyệt sản phẩm, người mua đóng tiền cọc, tham gia phòng đấu giá, cho đến khi chốt đơn và thanh toán.
+* **Quản lý Định danh & KYC:** Yêu cầu người dùng xác minh danh tính (KYC) nhiều bước thông qua giấy tờ tùy thân trước khi được cấp quyền tham gia mua hoặc bán, đảm bảo tính minh bạch và an toàn của sàn giao dịch.
+* **Quản trị Tài chính & Ví điện tử (E-Wallet):** Tích hợp ví điện tử cá nhân cho phép nạp/rút tiền, tự động đóng băng (hold) khoản cọc khi vào phòng đấu và hoàn cọc (refund) hoặc tất toán (settle) hoàn toàn tự động.
 
-### Setup Steps (Các bước cài đặt)
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/your-repo/auction-web.git](https://github.com/your-repo/auction-web.git)
-   ```
+### 2.2. Hàm lượng Nghiên cứu Khoa học & Công nghệ (Research Depth)
+* **Xử lý Đồng thời (Concurrency Control):** Thuật toán xử lý tình trạng Race Condition khi nhiều người dùng cùng đặt giá (bid) trong cùng một mili-giây, kết hợp Redis để cache dữ liệu tốc độ cao.
+* **Thuật toán Chống bắn tỉa (Anti-Sniping):** Tự động phát hiện và gia hạn thêm thời gian cho phiên đấu giá nếu có người dùng đặt giá ở những giây cuối cùng, đảm bảo công bằng cho mọi người tham gia.
+* **Tích hợp Trí tuệ Nhân tạo (AI Evaluation):** Ứng dụng AI phân tích hình ảnh và mô tả để tự động đưa ra các đề xuất về giá trị sản phẩm, hỗ trợ người bán định giá khởi điểm.
+* **Cơ chế Hướng sự kiện (Event-Driven Architecture):** Tích hợp WebSockets/Socket.io để truyền tải dữ liệu giá thầu và trạng thái phòng đấu giá theo thời gian thực tới toàn bộ client thay vì dùng HTTP request truyền thống.
 
-2. **Thiết lập Cơ sở dữ liệu (Database Setup):**
-   * Tạo một database trong MySQL với tên `auction_db`.
-   * Chạy các script SQL khởi tạo bảng (nếu có) trong thư mục `/database` hoặc để cấu hình ORM tự động tạo bảng (auto-ddl).
+---
 
-3. **Cấu hình môi trường (Environment Configuration):**
-   * Mở file `src/main/resources/application.properties` (hoặc `.yml`).
-   * Cấu hình thông tin kết nối Database và Redis:
-     ```properties
-     spring.datasource.url=jdbc:mysql://localhost:3306/auction_db
-     spring.datasource.username=root
-     spring.datasource.password=your_password
-     
-     spring.data.redis.host=localhost
-     spring.data.redis.port=6379
-     ```
+## 3. Các Tính năng Chính theo Nhóm Người dùng (Key Features)
 
-4. **Khởi chạy ứng dụng (Run the Application):**
-   * Mở terminal tại thư mục gốc của project và chạy lệnh:
-   ```bash
-   mvn clean install
-   mvn spring-boot:run
-   ```
-   * Server backend sẽ khởi chạy tại: `http://localhost:8080`
+### 3.1. Guest (Khách vãng lai)
+* **Khám phá hệ thống:** Duyệt danh sách các phiên đấu giá công khai, xem thông tin chung và chi tiết sản phẩm.
+* **Đăng ký / Đăng nhập:** Tạo tài khoản mới thông qua hệ thống định danh cơ bản hoặc Google/Facebook để trở thành Member.
 
-## 4. Tài liệu API (API Documentation)
-Sau khi ứng dụng khởi chạy thành công, có thể truy cập tài liệu API (Swagger UI) tại:
-👉 `http://localhost:8080/swagger-ui.html`
+### 3.2. Member (Thành viên hệ thống)
+* **Quản lý hồ sơ:** Cập nhật thông tin cá nhân, địa chỉ, ảnh đại diện và thông tin liên lạc.
+* **Xác minh danh tính (KYC):** Tải lên các tài liệu tùy thân để hệ thống xét duyệt trước khi tham gia các hoạt động tài chính.
+* **Quản lý Ví điện tử:** Truy cập bảng điều khiển ví (Wallet Dashboard), kiểm tra số dư, nạp tiền (Deposit) và yêu cầu rút tiền (Withdrawal).
 
-## 5. Cấu trúc thư mục chính (Main Folder Structure)
+### 3.3. Buyer (Người mua - Đã KYC)
+* **Đăng ký tham gia & Đặt cọc:** Ghi danh vào các phiên đấu giá sắp tới và thanh toán khoản tiền cọc bắt buộc để giữ chỗ.
+* **Phòng đấu giá trực tiếp:** Tham gia phòng đấu giá thời gian thực, liên tục cập nhật giá thầu (Place Bid) cạnh tranh với các người mua khác.
+* **Thanh toán & Nhận hàng:** Thực hiện tất toán số tiền còn lại của đơn hàng qua cổng thanh toán sau khi thắng thầu.
+
+### 3.4. Seller (Người bán - Đã KYC)
+* **Khởi tạo phiên đấu giá:** Gửi yêu cầu đăng bán sản phẩm, cung cấp chi tiết hình ảnh, giá khởi điểm, bước giá và thực hiện ký cam kết số.
+* **Sử dụng AI Định giá:** Nhận đánh giá và gợi ý mức giá khởi điểm tự động từ hệ thống AI dựa trên dữ liệu sản phẩm.
+* **Giám sát phiên đấu giá:** Theo dõi trực tiếp diễn biến đặt giá thầu, người trả giá cao nhất và kiểm tra trạng thái thanh toán giải ngân sau sự kiện.
+
+### 3.5. Staff (Nhân viên Kiểm duyệt)
+* **Xét duyệt sản phẩm:** Rà soát, phê duyệt hoặc từ chối các yêu cầu tạo phiên đấu giá từ Seller.
+* **Kiểm duyệt hồ sơ & Tài chính:** Đánh giá hồ sơ KYC, rà soát và phê duyệt các yêu cầu rút tiền về ngân hàng để phòng chống gian lận.
+* **Hỗ trợ khách hàng:** Xử lý các vé hỗ trợ (Support tickets), giải đáp thắc mắc và khắc phục sự cố cho người dùng.
+
+### 3.6. Admin (Quản trị viên hệ thống)
+* **Cấu hình Luật đấu giá:** Thiết lập các thông số hệ thống cốt lõi như thời gian Anti-Sniping, bước giá tối thiểu, tỷ lệ phần trăm đặt cọc và hoa hồng nền tảng.
+* **Quản lý Tài khoản & Phân quyền:** Khóa, mở khóa tài khoản, thiết lập vai trò (Roles) và cấp quyền truy cập cho nhân viên Staff.
+* **Giải quyết Tranh chấp:** Đóng vai trò trọng tài xử lý các vấn đề leo thang giữa Người mua và Người bán (hàng giả, từ chối nhận hàng).
+* **Báo cáo & Thống kê:** Theo dõi nhật ký kiểm toán (Audit logs), xuất báo cáo doanh thu và phân tích hiệu suất hệ thống.
+
+### 3.7. Phân hệ Scheduler & Payment Gateway (Tự động hóa)
+* **Automated Scheduler:** Tiến trình chạy ngầm tự động kích hoạt phiên đấu giá khi đến giờ, đóng phiên khi hết hạn, chốt kết quả và gọi lệnh hoàn cọc tự động cho những người không thắng thầu.
+* **Payment Gateway:** Xử lý giao dịch bảo mật qua VNPay/Stripe cho các thao tác nạp tiền và thanh toán đơn hàng cuối.
+
+---
+
+## 4. Quản lý Tiến độ Công việc (Jira)
+
+Toàn bộ các đầu việc và tiến độ của dự án được quản lý nghiêm ngặt theo mô hình Agile/Scrum.
+* **Đường dẫn Jira Board:** [Hệ thống Quản lý Dự án - Jira](https://lsang9494.atlassian.net/jira/software/projects/SCRUM/boards/1)
+* **Workflow chuẩn hóa:** `To Do` -> `In Progress` -> `Review` -> `Done`. Các tác vụ được phân công rõ ràng cho từng thành viên (Backend, Frontend, BA) kèm theo thời hạn hoàn thành (Sprint).
+
+---
+
+## 5. Thiết kế Kiến trúc & Cấu trúc Mã nguồn
+**Đường dẫn UI figma** [UI design - Figma](https://www.figma.com/design/ESrHd6EHbKn58RLffheDzb/Auction-Online?node-id=0-1&t=gm0KEJMdO2vs1IIL-1)
+Hệ thống được phát triển theo kiến trúc Layered Architecture kết hợp Event-Driven. Cấu trúc thư mục nguồn Backend (Java/Spring Boot) được tổ chức tối ưu cho việc bảo trì:
+---
+
+## 6. Kho lưu trữ Mã nguồn (Repositories)
+
+Hệ thống được phát triển theo cấu trúc phân tách rõ ràng giữa giao diện và máy chủ, quản lý mã nguồn độc lập qua 2 repository để tối ưu hóa quá trình phát triển và triển khai (CI/CD):
+
+* **Frontend Repository:** [auction-web-frontend](https://github.com/tuan190605/auction-web-frontend.git)
+* **Backend Repository:** [auction-web-backend](https://github.com/tuan190605/auction-web-backend.git)
+
+---
+
+## 7. Overleaf 
+* **Over leaf link** [overleaf](https://www.overleaf.com/4388332974mwtpqwkrgdnd#4bbf5b)
+https://www.overleaf.com/4388332974mwtpqwkrgdnd#4bbf5b
+
+---
+
 ```text
 src/main/java/com/auction/
-├── config/           # Cấu hình WebSocket, Security, Redis
-├── controller/       # Các API Endpoints
-├── model/            # Thực thể Database (User, Product, Bid...)
-├── repository/       # Giao tiếp với Database (Spring Data JPA)
-└── service/          # Chứa logic nghiệp vụ (Xử lý đấu giá, tính toán)
-```
+├── config/           # Cấu hình WebSocket, Spring Security, Redis Cache, Payment Gateway
+├── controller/       # Các API Endpoints (Auth, Auction, Wallet, Product, Bidding)
+├── model/            # Thực thể Database (Users, Products, Auctions, Bids, Wallets...)
+├── repository/       # Tầng giao tiếp với Cơ sở dữ liệu (Spring Data JPA)
+├── service/          # Tầng Business Logic (Xử lý luật đấu giá, xử lý giao dịch, thuật toán)
+└── utils/            # Các hàm hỗ trợ (Mã hóa MD5, định dạng thời gian, xử lý file)
 
-## 6. Thành viên nhóm (Contributors)
-* **[Tuan]** - [DE190463] - Nhiệm vụ: Xử lý CSDL, API Đăng nhập / Backend
-* **[Sang]** - [DE190062] - Nhiệm vụ: Thuật toán Real-time Bidding (WebSocket) / Backend
-* **[Long]** - [DE190344] - Nhiệm vụ: Thiết kế giao diện / Frontend
-* **[Thắng]** - [DE190404] - Nhiệm vụ: Tích hợp thanh toán / API Sản phẩm
-* **[Đức]** - [DE191098] - Nhiệm vụ: Viết tài liệu SRS, Tester & Quản lý dự án
